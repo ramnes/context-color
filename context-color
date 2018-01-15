@@ -41,16 +41,11 @@ __context_color_count() {
 }
 
 __context_color_hash() {
-    eval "$CONTEXT" | sum
-}
-
-__context_color_number_from_hash() {
-    awk -v count=$(__context_color_count) \
-        'count>1 {print 1 + ($1 % (count - 1))}'
+    eval "$CONTEXT" | sum | cut -d' ' -f1
 }
 
 __context_color_number() {
-    __context_color_hash | __context_color_number_from_hash
+    expr 1 + "$(__context_color_hash)" % \( "$(__context_color_count)" - 1 \)
 }
 
 __context_color_sequence() {
