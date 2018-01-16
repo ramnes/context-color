@@ -28,6 +28,7 @@ Print a color sequence based on different context informations.
 OPTIONS:
     --help, -h          Print this help.
     --background, -b    Use a background sequence rather than foreground.
+    --prompt, -p        Declare the sequence as non-printable for prompts.
 
     --context <command>, -c <command>
                         Define the context command on which result the color
@@ -56,7 +57,13 @@ __context_color_sequence() {
         capname="setab"
     fi
 
-    echo "$(tput $capname $(__context_color_number))"
+    local sequence="$(tput $capname $(__context_color_number))"
+
+    if [ "$PROMPT" ]
+    then
+        sequence="\[${sequence}\]"
+    fi
+    echo "$sequence"
 }
 
 context_color() {
@@ -75,6 +82,9 @@ context_color() {
             --background)
                 args="${args}-b "
                 ;;
+            --prompt)
+                args="${args}-p "
+                ;;
             --context)
                 args="${args}-c "
                 ;;
@@ -86,7 +96,7 @@ context_color() {
 
     eval set -- $args
 
-    while getopts "hbc:" OPTION
+    while getopts "hbpc:" OPTION
     do
          case $OPTION in
          h)
@@ -95,6 +105,9 @@ context_color() {
              ;;
          b)
              readonly BACKGROUND=1
+             ;;
+         p)
+             readonly PROMPT=1
              ;;
          c)
              CONTEXT="$OPTARG"
