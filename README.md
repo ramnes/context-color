@@ -35,7 +35,7 @@ Something in those lines should do it:
 
 ```bash
 cd .local/bin/
-wget https://github.com/ramnes/context-color/blob/master/context-color
+wget https://raw.githubusercontent.com/ramnes/context-color/master/context-color
 chmod a+x context-color
 ```
 
