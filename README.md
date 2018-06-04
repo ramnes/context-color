@@ -9,8 +9,8 @@ context-color
 Description
 -----------
 
-`context-color` is simple script that, when executed, outputs a color based on
-a command output's hash.
+`context-color` is a simple script that, when executed, outputs a color based
+on a command output's hash.
 
 For example, once installed somewhere in your `$PATH`, it allows you to do
 things like this:
