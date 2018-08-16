@@ -80,6 +80,12 @@ OPTIONS:
                         The default context is "whoami; hostname".
 ```
 
+The `-p` option must be used if you use `context-color` inside a prompt. It
+makes your shell understand that the color sequence characters won't be used
+when it's trying to guess the space left on the current line. See issue
+[#8](https://github.com/ramnes/context-color/issues/8) for a good description
+of what happens if you do not put `-p` in that situation.
+
 
 Credits
 -------
