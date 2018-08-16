@@ -5,15 +5,14 @@ context-color
 
 ![gif](demo.gif)
 
-
-Description
------------
-
 `context-color` is a simple script that, when executed, outputs a color based
 on a command output's hash.
 
-For example, once installed somewhere in your `$PATH`, it allows you to do
-things like this:
+
+Example
+-------
+
+Once installed somewhere in your `$PATH`, it allows you to do things like this:
 
 ```bash
 export PS1="$(context-color -p)$PS1\[\e[0m\]"
@@ -22,10 +21,23 @@ export PS1="$(context-color -p)$PS1\[\e[0m\]"
 (where `--prompt/-p` is the switch so that the color is escaped for prompts,
 and `\[\e[0m\]` the escape sequence to reset color)
 
-By default, the command used to generate the hash is `whoami; hostname`.  If
-you would just want the color to change according to the hostname, you would
-change the `$CONTEXT` variable environment (`export CONTEXT="hostname"`) or
-simply use the `--context/-c` option (`context-color -c "hostname"`).
+If your prompt does not use colors already, this example would customize it so
+that its color changes according to the current context.
+
+The default context command (i.e. the command that is used to generate the
+hash) is `whoami; hostname`.  If you would just want the color to change
+according to the hostname, you would change the `$CONTEXT` variable environment
+(`export CONTEXT="hostname"`) or simply use the `--context/-c` option
+(`context-color -c "hostname"`).
+
+Then you could make this customization permanent by adding this line to your
+`~/.bashrc`, or to the system-wide `bashrc` file (most likely somewhere in
+`/etc/`, depending on your distribution) if you would want all users to benefit
+from this.
+
+If you are working with several machines, you could either do that manipulation
+on every host, or use something like
+[Russell91/sshrc](https://github.com/Russell91/sshrc/).
 
 
 Install
@@ -37,6 +49,15 @@ Something in those lines should do it:
 cd .local/bin/
 wget https://raw.githubusercontent.com/ramnes/context-color/master/context-color
 chmod a+x context-color
+```
+
+This snippet assumes that `~/.local/bin/` is in your `$PATH` environment
+variable. If it is not, you can either put `context-color` somewhere else
+(`/usr/local/bin/`, for example), or insert `~/.local/bin/` into your `$PATH`,
+by adding this line into your bash configuration:
+
+```bash
+export PATH="~/.local/bin/:$PATH"
 ```
 
 
