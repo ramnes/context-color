@@ -39,6 +39,18 @@ wget https://raw.githubusercontent.com/ramnes/context-color/master/context-color
 chmod a+x context-color
 ```
 
+In order to use context-color for customizing your prompt by default, you need to add the script `context-color` to your PATH and modify your .bashrc files (on each host) with your customized new `PS1` variable. If you want this change to be applied system-wide on one host, you must change your `/etc/bashrc` (Redhat and friends) or `/etc/bash.bashrc` (Debian/Ubuntu) or `/etc/bash.bashrc.local` (Suse and others).
+
+Example
+=======
+
+Let the old PS1 definiton then add at the end of the .bashrc file (assuming `context-color` is at `/usr/local/bin/context-color`):
+```
+if [ -x /usr/local/bin/context-color ]; then # check if the script exists
+        PS1="$(context-color -p)$PS1\[\e[0m\]" # wrap $PS1 with context-color change
+fi
+```
+
 
 Usage
 -----
@@ -58,7 +70,6 @@ OPTIONS:
                         will be generated.
                         The default context is "whoami; hostname".
 ```
-
 
 Credits
 -------
