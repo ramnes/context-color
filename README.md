@@ -47,7 +47,7 @@ Example
 Let the old PS1 definiton then add at the end of the .bashrc file (assuming `context-color` is at `/usr/local/bin/context-color`):
 ```
 if [ -x /usr/local/bin/context-color ]; then # check if the script exists
-        PS1="$(context-color -p)$PS1\[\e[0m\]" # wrap $PS1 with context-color change
+        PS1="\[$(context-color)\]$PS1\[\e[0m\]" # wrap $PS1 with context-color change
 fi
 ```
 
