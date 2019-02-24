@@ -65,11 +65,11 @@ Usage
 -----
 
 ```
-usage: $PROGNAME [OPTIONS]
+usage: context-color [OPTIONS]
 
 Print a color sequence based on different context informations.
 
-OPTIONS:
+COMMON OPTIONS:
     --help, -h          Print this help.
     --background, -b    Use a background sequence rather than foreground.
     --prompt, -p        Declare the sequence as non-printable for prompts.
@@ -78,6 +78,9 @@ OPTIONS:
                         Define the context command on which result the color
                         will be generated.
                         The default context is "whoami; hostname".
+
+DEBUG OPTIONS:
+    --debug, -d         Output the sequence as a human-readable string.
 ```
 
 The `-p` option must be used if you use `context-color` inside a prompt. It

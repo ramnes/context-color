@@ -25,7 +25,7 @@ usage: $PROGNAME [OPTIONS]
 
 Print a color sequence based on different context informations.
 
-OPTIONS:
+COMMON OPTIONS:
     --help, -h          Print this help.
     --background, -b    Use a background sequence rather than foreground.
     --prompt, -p        Declare the sequence as non-printable for prompts.
@@ -34,6 +34,9 @@ OPTIONS:
                         Define the context command on which result the color
                         will be generated.
                         The default context is "$DEFAULT_CONTEXT".
+
+DEBUG OPTIONS:
+    --debug, -d         Output the sequence as a human-readable string.
 EOF
 }
 
@@ -88,6 +91,9 @@ context_color() {
             --context)
                 args="${args}-c "
                 ;;
+            --debug)
+                args="${args}-d "
+                ;;
             *)
                 args="$args $arg"
                 ;;
@@ -96,7 +102,7 @@ context_color() {
 
     eval set -- $args
 
-    while getopts "hbpc:" OPTION
+    while getopts "hbpc:d" OPTION
     do
          case $OPTION in
          h)
@@ -112,10 +118,19 @@ context_color() {
          c)
              CONTEXT="$OPTARG"
              ;;
+         d)
+             readonly DEBUG=1
+             ;;
          esac
     done
 
-    echo -n "$(__context_color_sequence)"
+    local sequence="$(__context_color_sequence)"
+    if [ "$DEBUG" ]
+    then
+        echo "Debug: ${sequence}$(echo ${sequence} | cat -v)$(tput sgr0)"
+    else
+        echo -n "$sequence"
+    fi
     return 0
 }
 
