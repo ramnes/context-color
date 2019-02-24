@@ -43,6 +43,7 @@ COMMON OPTIONS:
 
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string.
+    --force <color>, -f Ignore the context and force a color id instead.
 EOF
 }
 
@@ -59,8 +60,15 @@ __context_color_hash() {
 }
 
 __context_color_id() {
-    local id=$(expr 1 + $(__context_color_hash) % \
-                    $(expr $(__context_color_count) - 1 - $(__context_color_excludes_count)))
+    local id=""
+
+    if [ "$FORCE_COLOR" ]
+    then
+        id="$FORCE_COLOR"
+    else
+        id=$(expr 1 + $(__context_color_hash) % \
+                  $(expr $(__context_color_count) - 1 - $(__context_color_excludes_count)))
+    fi
 
     for excluded_id in $(echo "$EXCLUDES" | tr ", " "\n")
     do
@@ -108,6 +116,9 @@ context_color() {
             --debug)
                 args="${args}-d "
                 ;;
+            --force)
+                args="${args}-f "
+                ;;
             --exclude)
                 args="${args}-e "
                 ;;
@@ -119,7 +130,7 @@ context_color() {
 
     eval set -- $args
 
-    while getopts "hbpc:e:d" OPTION
+    while getopts "hbpc:e:df:" OPTION
     do
          case $OPTION in
          h)
@@ -156,6 +167,9 @@ context_color() {
              ;;
          d)
              readonly DEBUG=1
+             ;;
+         f)
+             readonly FORCE_COLOR="$OPTARG"
              ;;
          esac
     done

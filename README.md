@@ -86,6 +86,7 @@ COMMON OPTIONS:
 
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string.
+    --force <color>, -f Ignore the context and force a color id instead.
 ```
 
 The `-p` option must be used if you use `context-color` inside a prompt. It
