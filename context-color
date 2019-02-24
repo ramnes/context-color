@@ -77,7 +77,6 @@ context_color() {
 
     for arg
     do
-        local delim=""
         case "$arg" in
             --help)
                 args="${args}-h "
@@ -95,7 +94,7 @@ context_color() {
                 args="${args}-d "
                 ;;
             *)
-                args="$args $arg"
+                args="$args \"$arg\" "
                 ;;
         esac
     done
