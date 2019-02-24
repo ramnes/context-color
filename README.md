@@ -85,7 +85,8 @@ COMMON OPTIONS:
                         The default excluded colors are: "0,7,15"
 
 DEBUG OPTIONS:
-    --debug, -d         Output the sequence as a human-readable string.
+    --debug, -d         Output the sequence as a human-readable string and a
+                        lot of other useful information.
     --force <color>, -f Ignore the context and force a color id instead.
 ```
 

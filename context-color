@@ -42,8 +42,32 @@ COMMON OPTIONS:
                         The default excluded colors are: "$DEFAULT_EXCLUDES"
 
 DEBUG OPTIONS:
-    --debug, -d         Output the sequence as a human-readable string.
+    --debug, -d         Output the sequence as a human-readable string and a
+                        lot of other useful information.
     --force <color>, -f Ignore the context and force a color id instead.
+EOF
+}
+
+__context_color_debug() {
+    local sequence="$(__context_color_sequence)"
+    cat <<- EOF
+Setup:
+    Background mode: ${BACKGROUND}
+    Prompt mode: ${PROMPT}
+    Context command: ${CONTEXT}
+    Excluded colors: ${EXCLUDES}
+    Forced color: ${FORCE_COLOR}
+
+Colors:
+    Terminfo: $(__context_color_terminfo_count)
+    Excluded: $(__context_color_excludes_count)
+    Included: $(__context_color_count)
+
+Execution:
+    Context hash: $(__context_color_hash)
+    Choosen color: $(__context_color_id)
+
+Output: ${sequence}$(echo ${sequence} | cat -v)$(tput sgr0)
 EOF
 }
 
@@ -97,7 +121,7 @@ __context_color_sequence() {
     then
         sequence="\[${sequence}\]"
     fi
-    echo "$sequence"
+    echo -n "$sequence"
 }
 
 context_color() {
@@ -186,12 +210,11 @@ context_color() {
         EXCLUDES="$DEFAULT_EXCLUDES"
     fi
 
-    local sequence="$(__context_color_sequence)"
     if [ "$DEBUG" ]
     then
-        echo "Debug: ${sequence}$(echo ${sequence} | cat -v)$(tput sgr0)"
+        __context_color_debug
     else
-        echo -n "$sequence"
+        __context_color_sequence
     fi
     return 0
 }
