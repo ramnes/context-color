@@ -79,6 +79,11 @@ COMMON OPTIONS:
                         will be generated.
                         The default context is "whoami; hostname".
 
+    --exclude <colors>, -e <colors>
+                        Comma separated list of color ids not to be used.
+                        Multiple --exclude/-e arguments can be specified.
+                        The default excluded colors are: "0,7,15"
+
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string.
 ```

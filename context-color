@@ -18,6 +18,7 @@
 
 readonly PROGNAME=$(basename $0)
 readonly DEFAULT_CONTEXT="whoami; hostname"
+readonly DEFAULT_EXCLUDES="0,7,15"
 
 __context_color_usage() {
     cat <<- EOF
@@ -35,6 +36,11 @@ COMMON OPTIONS:
                         will be generated.
                         The default context is "$DEFAULT_CONTEXT".
 
+    --exclude <colors>, -e <colors>
+                        Comma separated list of color ids not to be used.
+                        Multiple --exclude/-e arguments can be specified.
+                        The default excluded colors are: "$DEFAULT_EXCLUDES"
+
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string.
 EOF
@@ -44,12 +50,26 @@ __context_color_count() {
     printf "%d" $(infocmp -1 | sed -n -e "s/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p")
 }
 
+__context_color_excludes_count() {
+    echo "$EXCLUDES" | tr "," "\n" | wc -l
+}
+
 __context_color_hash() {
     eval "$CONTEXT" | sum | cut -d' ' -f1
 }
 
-__context_color_number() {
-    expr 1 + $(__context_color_hash) % $(expr $(__context_color_count) - 1)
+__context_color_id() {
+    local id=$(expr 1 + $(__context_color_hash) % \
+                    $(expr $(__context_color_count) - 1 - $(__context_color_excludes_count)))
+
+    for excluded_id in $(echo "$EXCLUDES" | tr ", " "\n")
+    do
+        if [ "$id" -ge "$excluded_id" ]
+        then
+            id=$((id + 1))
+        fi
+    done
+    echo "$id"
 }
 
 __context_color_sequence() {
@@ -60,7 +80,7 @@ __context_color_sequence() {
         capname="setab"
     fi
 
-    local sequence="$(tput $capname $(__context_color_number))"
+    local sequence="$(tput $capname $(__context_color_id))"
 
     if [ "$PROMPT" ]
     then
@@ -70,11 +90,6 @@ __context_color_sequence() {
 }
 
 context_color() {
-    if [ ! "$CONTEXT" ]
-    then
-        CONTEXT="$DEFAULT_CONTEXT"
-    fi
-
     for arg
     do
         case "$arg" in
@@ -93,6 +108,9 @@ context_color() {
             --debug)
                 args="${args}-d "
                 ;;
+            --exclude)
+                args="${args}-e "
+                ;;
             *)
                 args="$args \"$arg\" "
                 ;;
@@ -101,7 +119,7 @@ context_color() {
 
     eval set -- $args
 
-    while getopts "hbpc:d" OPTION
+    while getopts "hbpc:e:d" OPTION
     do
          case $OPTION in
          h)
@@ -117,11 +135,39 @@ context_color() {
          c)
              CONTEXT="$OPTARG"
              ;;
+         e)
+             for arg in $(echo "$OPTARG" | tr "," "\n")
+             do
+                 if !([ "$arg" -le $(__context_color_count) ] &&
+                          [ "$arg" -ge "0" ]) 2> /dev/null
+                 then
+                     >&2 echo "Invalid color id: $arg"
+                     return 1
+                 fi
+
+                 if ! [ "$EXCLUDES" ]
+                 then
+                     EXCLUDES="$arg"
+                 elif !(echo "$EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
+                 then
+                     EXCLUDES="$EXCLUDES, $arg"
+                 fi
+             done
+             ;;
          d)
              readonly DEBUG=1
              ;;
          esac
     done
+
+    if [ ! "$CONTEXT" ]
+    then
+        CONTEXT="$DEFAULT_CONTEXT"
+    fi
+    if [ ! "$EXCLUDES" ]
+    then
+        EXCLUDES="$DEFAULT_EXCLUDES"
+    fi
 
     local sequence="$(__context_color_sequence)"
     if [ "$DEBUG" ]
