@@ -47,7 +47,7 @@ DEBUG OPTIONS:
 EOF
 }
 
-__context_color_count() {
+__context_color_terminfo_count() {
     printf "%d" $(infocmp -1 | sed -n -e "s/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p")
 }
 
@@ -55,8 +55,12 @@ __context_color_excludes_count() {
     echo "$EXCLUDES" | tr "," "\n" | wc -l
 }
 
+__context_color_count(){
+    expr $(__context_color_terminfo_count) - $(__context_color_excludes_count)
+}
+
 __context_color_hash() {
-    eval "$CONTEXT" | sum | cut -d' ' -f1
+    expr $(eval "$CONTEXT" | sum | cut -d' ' -f1) + 0
 }
 
 __context_color_id() {
@@ -66,8 +70,7 @@ __context_color_id() {
     then
         id="$FORCE_COLOR"
     else
-        id=$(expr 1 + $(__context_color_hash) % \
-                  $(expr $(__context_color_count) - 1 - $(__context_color_excludes_count)))
+        id=$(( $(__context_color_hash) % ($(__context_color_count) - 1) ))
     fi
 
     for excluded_id in $(echo "$EXCLUDES" | tr ", " "\n")
@@ -149,7 +152,7 @@ context_color() {
          e)
              for arg in $(echo "$OPTARG" | tr "," "\n")
              do
-                 if !([ "$arg" -le $(__context_color_count) ] &&
+                 if !([ "$arg" -le $(__context_color_terminfo_count) ] &&
                           [ "$arg" -ge "0" ]) 2> /dev/null
                  then
                      >&2 echo "Invalid color id: $arg"
