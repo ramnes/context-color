@@ -86,7 +86,7 @@ __context_color_count(){
 
 __context_color_hash() {
     hash=$(eval "$CONTEXT" | sum | cut -d' ' -f1)
-    echo "10o${hash}p" | dc
+    echo "obase=10; $hash" | bc
 }
 
 __context_color_id() {
