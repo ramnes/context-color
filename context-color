@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-readonly PROGNAME=$(basename $0)
+readonly PROGNAME=$(basename "$0")
 readonly DEFAULT_CONTEXT="whoami; hostname"
 readonly DEFAULT_EXCLUDES="0,7,15"
 
@@ -49,7 +49,7 @@ EOF
 }
 
 __context_color_debug() {
-    local sequence="$(__context_color_sequence)"
+    sequence="$(__context_color_sequence)"
     cat <<- EOF
 Setup:
     Background mode: ${BACKGROUND}
@@ -67,12 +67,13 @@ Execution:
     Context hash: $(__context_color_hash)
     Choosen color: $(__context_color_id)
 
-Output: ${sequence}$(echo ${sequence} | cat -v)$(tput sgr0)
+Output: ${sequence}$(echo "$sequence" | cat -v)$(tput sgr0)
 EOF
 }
 
 __context_color_terminfo_count() {
-    printf "%d" $(infocmp -1 | sed -n -e "s/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p")
+    hexcount=$(infocmp -1 | sed -n -e "s/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p")
+    printf "%d" "$hexcount"
 }
 
 __context_color_excludes_count() {
@@ -80,17 +81,16 @@ __context_color_excludes_count() {
 }
 
 __context_color_count(){
-    expr $(__context_color_terminfo_count) - $(__context_color_excludes_count)
+    echo $(( $(__context_color_terminfo_count) - $(__context_color_excludes_count) ))
 }
 
 __context_color_hash() {
-    expr $(eval "$CONTEXT" | sum | cut -d' ' -f1) + 0
+    hash=$(eval "$CONTEXT" | sum | cut -d' ' -f1)
+    echo "10o${hash}p" | dc
 }
 
 __context_color_id() {
-    local id=""
-
-    if [ "$FORCE_COLOR" ]
+    if [ -n "$FORCE_COLOR" ]
     then
         id="$FORCE_COLOR"
     else
@@ -108,20 +108,20 @@ __context_color_id() {
 }
 
 __context_color_sequence() {
-    local capname="setaf"
-
-    if [ "$BACKGROUND" ]
+    if [ -n "$BACKGROUND" ]
     then
         capname="setab"
+    else
+        capname="setaf"
     fi
 
-    local sequence="$(tput $capname $(__context_color_id))"
+    sequence="$(tput $capname "$(__context_color_id)")"
 
-    if [ "$PROMPT" ]
+    if [ -n "$PROMPT" ]
     then
         sequence="\[${sequence}\]"
     fi
-    echo -n "$sequence"
+    printf "%s" "$sequence"
 }
 
 context_color() {
@@ -155,7 +155,7 @@ context_color() {
         esac
     done
 
-    eval set -- $args
+    eval set -- "$args"
 
     while getopts "hbpc:e:df:" OPTION
     do
@@ -176,17 +176,17 @@ context_color() {
          e)
              for arg in $(echo "$OPTARG" | tr "," "\n")
              do
-                 if !([ "$arg" -le $(__context_color_terminfo_count) ] &&
-                          [ "$arg" -ge "0" ]) 2> /dev/null
+                 if ! { [ "$arg" -le "$(__context_color_terminfo_count)" ] &&
+                            [ "$arg" -ge "0" ]; } 2> /dev/null
                  then
                      >&2 echo "Invalid color id: $arg"
                      return 1
                  fi
 
-                 if ! [ "$EXCLUDES" ]
+                 if [ -z "$EXCLUDES" ]
                  then
                      EXCLUDES="$arg"
-                 elif !(echo "$EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
+                 elif ! (echo "$EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
                  then
                      EXCLUDES="$EXCLUDES, $arg"
                  fi
@@ -198,19 +198,22 @@ context_color() {
          f)
              readonly FORCE_COLOR="$OPTARG"
              ;;
+         *)
+             __context_color_usage
+             exit 1
          esac
     done
 
-    if [ ! "$CONTEXT" ]
+    if [ -z "$CONTEXT" ]
     then
         CONTEXT="$DEFAULT_CONTEXT"
     fi
-    if [ ! "$EXCLUDES" ]
+    if [ -z "$EXCLUDES" ]
     then
         EXCLUDES="$DEFAULT_EXCLUDES"
     fi
 
-    if [ "$DEBUG" ]
+    if [ -n "$DEBUG" ]
     then
         __context_color_debug
     else
