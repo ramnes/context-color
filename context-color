@@ -72,12 +72,12 @@ EOF
 }
 
 __context_color_terminfo_count() {
-    hexcount=$(infocmp -1 | sed -n -e "s/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p")
+    hexcount=$(infocmp -1 | sed -n -e 's/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p')
     printf "%d" "$hexcount"
 }
 
 __context_color_excludes_count() {
-    echo "$CC_EXCLUDES" | tr "," "\n" | wc -l
+    echo "$CC_EXCLUDES" | tr "," '\n' | wc -l
 }
 
 __context_color_count(){
@@ -97,7 +97,7 @@ __context_color_id() {
         id=$(( $(__context_color_hash) % ($(__context_color_count) - 1) ))
     fi
 
-    for excluded_id in $(echo "$EXCLUDES" | tr ", " "\n")
+    for excluded_id in $(echo "$EXCLUDES" | tr ", " '\n')
     do
         if [ "$id" -ge "$excluded_id" ]
         then
@@ -119,7 +119,7 @@ __context_color_sequence() {
 
     if [ -n "$CC_PROMPT" ]
     then
-        sequence="\[${sequence}\]"
+        sequence="\\[${sequence}\\]"
     fi
     printf "%s" "$sequence"
 }
@@ -174,7 +174,7 @@ context_color() {
              CC_CONTEXT="$OPTARG"
              ;;
          e)
-             for arg in $(echo "$OPTARG" | tr "," "\n")
+             for arg in $(echo "$OPTARG" | tr "," '\n')
              do
                  if ! { [ "$arg" -le "$(__context_color_terminfo_count)" ] &&
                             [ "$arg" -ge "0" ]; } 2> /dev/null
@@ -186,7 +186,7 @@ context_color() {
                  if [ -z "$CC_EXCLUDES" ]
                  then
                      CC_EXCLUDES="$arg"
-                 elif ! (echo "$CC_EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
+                 elif ! (echo "$CC_EXCLUDES" | tr ", " '\n' | grep -qw "$arg")
                  then
                      CC_EXCLUDES="$CC_EXCLUDES, $arg"
                  fi
