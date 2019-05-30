@@ -52,11 +52,11 @@ __context_color_debug() {
     sequence="$(__context_color_sequence)"
     cat <<- EOF
 Setup:
-    Background mode: ${BACKGROUND}
-    Prompt mode: ${PROMPT}
-    Context command: ${CONTEXT}
-    Excluded colors: ${EXCLUDES}
-    Forced color: ${FORCE_COLOR}
+    Background mode: ${CC_BACKGROUND}
+    Prompt mode: ${CC_PROMPT}
+    Context command: ${CC_CONTEXT}
+    Excluded colors: ${CC_EXCLUDES}
+    Forced color: ${CC_FORCE_COLOR}
 
 Colors:
     Terminfo: $(__context_color_terminfo_count)
@@ -77,7 +77,7 @@ __context_color_terminfo_count() {
 }
 
 __context_color_excludes_count() {
-    echo "$EXCLUDES" | tr "," "\n" | wc -l
+    echo "$CC_EXCLUDES" | tr "," "\n" | wc -l
 }
 
 __context_color_count(){
@@ -85,14 +85,14 @@ __context_color_count(){
 }
 
 __context_color_hash() {
-    hash=$(eval "$CONTEXT" | sum | cut -d' ' -f1)
+    hash=$(eval "$CC_CONTEXT" | sum | cut -d' ' -f1)
     echo "obase=10; $hash" | bc
 }
 
 __context_color_id() {
-    if [ -n "$FORCE_COLOR" ]
+    if [ -n "$CC_FORCE_COLOR" ]
     then
-        id="$FORCE_COLOR"
+        id="$CC_FORCE_COLOR"
     else
         id=$(( $(__context_color_hash) % ($(__context_color_count) - 1) ))
     fi
@@ -108,7 +108,7 @@ __context_color_id() {
 }
 
 __context_color_sequence() {
-    if [ -n "$BACKGROUND" ]
+    if [ -n "$CC_BACKGROUND" ]
     then
         capname="setab"
     else
@@ -117,7 +117,7 @@ __context_color_sequence() {
 
     sequence="$(tput $capname "$(__context_color_id)")"
 
-    if [ -n "$PROMPT" ]
+    if [ -n "$CC_PROMPT" ]
     then
         sequence="\[${sequence}\]"
     fi
@@ -165,13 +165,13 @@ context_color() {
              exit 0
              ;;
          b)
-             readonly BACKGROUND=1
+             readonly CC_BACKGROUND=1
              ;;
          p)
-             readonly PROMPT=1
+             readonly CC_PROMPT=1
              ;;
          c)
-             CONTEXT="$OPTARG"
+             CC_CONTEXT="$OPTARG"
              ;;
          e)
              for arg in $(echo "$OPTARG" | tr "," "\n")
@@ -183,20 +183,20 @@ context_color() {
                      return 1
                  fi
 
-                 if [ -z "$EXCLUDES" ]
+                 if [ -z "$CC_EXCLUDES" ]
                  then
-                     EXCLUDES="$arg"
-                 elif ! (echo "$EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
+                     CC_EXCLUDES="$arg"
+                 elif ! (echo "$CC_EXCLUDES" | tr ", " "\n" | grep -qw "$arg")
                  then
-                     EXCLUDES="$EXCLUDES, $arg"
+                     CC_EXCLUDES="$CC_EXCLUDES, $arg"
                  fi
              done
              ;;
          d)
-             readonly DEBUG=1
+             readonly CC_DEBUG=1
              ;;
          f)
-             readonly FORCE_COLOR="$OPTARG"
+             readonly CC_FORCE_COLOR="$OPTARG"
              ;;
          *)
              __context_color_usage
@@ -204,16 +204,16 @@ context_color() {
          esac
     done
 
-    if [ -z "$CONTEXT" ]
+    if [ -z "$CC_CONTEXT" ]
     then
-        CONTEXT="$DEFAULT_CONTEXT"
+        CC_CONTEXT="$DEFAULT_CONTEXT"
     fi
-    if [ -z "$EXCLUDES" ]
+    if [ -z "$CC_EXCLUDES" ]
     then
-        EXCLUDES="$DEFAULT_EXCLUDES"
+        CC_EXCLUDES="$DEFAULT_EXCLUDES"
     fi
 
-    if [ -n "$DEBUG" ]
+    if [ -n "$CC_DEBUG" ]
     then
         __context_color_debug
     else
