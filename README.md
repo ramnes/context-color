@@ -67,7 +67,7 @@ Usage
 ```
 usage: context-color [OPTIONS]
 
-Print a color sequence based on different context informations.
+Print a color sequence based on a command output's hash.
 
 COMMON OPTIONS:
     --help, -h          Print this help.
@@ -85,8 +85,8 @@ COMMON OPTIONS:
                         The default excluded colors are: "0,7,15"
 
 DEBUG OPTIONS:
-    --debug, -d         Output the sequence as a human-readable string and a
-                        lot of other useful information.
+    --debug, -d         Output the sequence as a human-readable string and more
+                        useful information.
     --force <color>, -f Ignore the context and force a color id instead.
 ```
 
