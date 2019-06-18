@@ -97,7 +97,7 @@ __context_color_id() {
         id=$(( $(__context_color_hash) % ($(__context_color_count) - 1) ))
     fi
 
-    for excluded_id in $(echo "$EXCLUDES" | tr ", " '\n')
+    for excluded_id in $(echo "$CC_EXCLUDES" | tr ", " '\n')
     do
         if [ "$id" -ge "$excluded_id" ]
         then
