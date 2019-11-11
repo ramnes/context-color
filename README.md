@@ -85,6 +85,12 @@ COMMON OPTIONS:
                         Multiple --exclude/-e arguments can be specified.
                         The default excluded colors are: "0,7,15"
 
+    --method <method>, -m <method>
+                        Choose which hash method to use. "sum" will tend to
+                        give adjacent colors for adjacent context outputs.
+                        "md5sum" will give more randomization on colors.
+                        The default method is: "$DEFAULT_METHOD"
+
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string and more
                         useful information.

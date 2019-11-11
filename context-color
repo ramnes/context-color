@@ -19,6 +19,7 @@
 readonly PROGNAME=$(basename "$0")
 readonly DEFAULT_CONTEXT="whoami; hostname"
 readonly DEFAULT_EXCLUDES="0,7,15"
+readonly DEFAULT_METHOD="sum"
 
 __context_color_usage() {
     cat <<- EOF
@@ -42,6 +43,12 @@ COMMON OPTIONS:
                         Multiple --exclude/-e arguments can be specified.
                         The default excluded colors are: "$DEFAULT_EXCLUDES"
 
+    --method <method>, -m <method>
+                        Choose which hashing method to use. "sum" will tend to
+                        give adjacent colors for adjacent context outputs.
+                        "md5sum" will give more randomization on colors.
+                        The default method is: "$DEFAULT_METHOD"
+
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string and more
                         useful information.
@@ -59,6 +66,7 @@ Setup:
     Prompt mode: ${CC_PROMPT}
     Context command: ${CC_CONTEXT}
     Excluded color ids: ${CC_EXCLUDES}
+    Method: ${CC_METHOD}
     Forced color id: ${CC_FORCE_COLOR}
 
 Colors:
@@ -87,8 +95,14 @@ __context_color_count(){
 }
 
 __context_color_hash() {
-    hash=$(eval "$CC_CONTEXT" | sum | cut -d' ' -f1)
-    echo "obase=10; $hash" | bc
+    if [ "$CC_METHOD" = "md5sum" ]
+    then
+        hash=$(eval "$CC_CONTEXT" | md5sum | head -c 6 | tr '[:lower:]' '[:upper:]')
+        echo "ibase=16; $hash" | bc
+    else
+        hash=$(eval "$CC_CONTEXT" | sum | cut -d' ' -f1)
+        echo "obase=10; $hash" | bc
+    fi
 }
 
 __context_color_id() {
@@ -154,6 +168,9 @@ context_color() {
             --exclude)
                 args="${args}-e "
                 ;;
+            --method)
+                args="${args}-m "
+                ;;
             *)
                 args="$args \"$arg\" "
                 ;;
@@ -162,7 +179,7 @@ context_color() {
 
     eval set -- "$args"
 
-    while getopts "hbipc:e:df:" OPTION
+    while getopts "hbipc:e:m:df:" OPTION
     do
          case $OPTION in
          h)
@@ -200,6 +217,9 @@ context_color() {
                  fi
              done
              ;;
+         m)
+             CC_METHOD="$OPTARG"
+             ;;
          d)
              readonly CC_DEBUG=1
              ;;
@@ -219,6 +239,10 @@ context_color() {
     if [ -z "$CC_EXCLUDES" ]
     then
         CC_EXCLUDES="$DEFAULT_EXCLUDES"
+    fi
+    if [ -z "$CC_METHOD" ]
+    then
+        CC_METHOD="$DEFAULT_METHOD"
     fi
 
     if [ -n "$CC_DEBUG" ]
