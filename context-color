@@ -55,21 +55,21 @@ __context_color_debug() {
     cat <<- EOF
 Setup:
     Background mode: ${CC_BACKGROUND}
+    Id mode: ${CC_ID}
     Prompt mode: ${CC_PROMPT}
     Context command: ${CC_CONTEXT}
-    Excluded colors: ${CC_EXCLUDES}
-    Forced color: ${CC_FORCE_COLOR}
+    Excluded color ids: ${CC_EXCLUDES}
+    Forced color id: ${CC_FORCE_COLOR}
 
 Colors:
     Terminfo: $(__context_color_terminfo_count)
     Excluded: $(__context_color_excludes_count)
     Included: $(__context_color_count)
 
-Execution:
+Output:
     Context hash: $(__context_color_hash)
-    Choosen color: $(__context_color_id)
-
-Output: ${sequence}$(echo "$sequence" | cat -v)$(tput sgr0)
+    Color id: $(__context_color_id)
+    Sequence: ${sequence}$(echo "$sequence" | cat -v)$(tput sgr0)
 EOF
 }
 
