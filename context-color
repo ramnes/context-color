@@ -29,6 +29,7 @@ Print a color sequence based on a command output's hash.
 COMMON OPTIONS:
     --help, -h          Print this help.
     --background, -b    Use a background sequence rather than foreground.
+    --id, -i            Print the color id rather than the color sequence.
     --prompt, -p        Declare the sequence as non-printable for prompts.
 
     --context <command>, -c <command>
@@ -135,6 +136,9 @@ context_color() {
             --background)
                 args="${args}-b "
                 ;;
+            --id)
+                args="${args}-i "
+                ;;
             --prompt)
                 args="${args}-p "
                 ;;
@@ -158,7 +162,7 @@ context_color() {
 
     eval set -- "$args"
 
-    while getopts "hbpc:e:df:" OPTION
+    while getopts "hbipc:e:df:" OPTION
     do
          case $OPTION in
          h)
@@ -167,6 +171,9 @@ context_color() {
              ;;
          b)
              readonly CC_BACKGROUND=1
+             ;;
+         i)
+             readonly CC_ID=1
              ;;
          p)
              readonly CC_PROMPT=1
@@ -217,6 +224,9 @@ context_color() {
     if [ -n "$CC_DEBUG" ]
     then
         __context_color_debug
+    elif [ -n "$CC_ID" ]
+    then
+        __context_color_id
     else
         __context_color_sequence
     fi

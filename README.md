@@ -72,6 +72,7 @@ Print a color sequence based on a command output's hash.
 COMMON OPTIONS:
     --help, -h          Print this help.
     --background, -b    Use a background sequence rather than foreground.
+    --id, -i            Print the color id rather than the color sequence.
     --prompt, -p        Declare the sequence as non-printable for prompts.
 
     --context <command>, -c <command>
