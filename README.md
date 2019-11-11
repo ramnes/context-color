@@ -89,7 +89,7 @@ COMMON OPTIONS:
                         Choose which hash method to use. "sum" will tend to
                         give adjacent colors for adjacent context outputs.
                         "md5sum" will give more randomization on colors.
-                        The default method is: "$DEFAULT_METHOD"
+                        The default method is: "sum"
 
 DEBUG OPTIONS:
     --debug, -d         Output the sequence as a human-readable string and more
