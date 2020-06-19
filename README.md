@@ -25,10 +25,10 @@ If your prompt does not use colors already, this example would customize it so
 that its color changes according to the current context.
 
 The default context command (i.e. the command that is used to generate the
-hash) is `whoami; hostname`.  If you would just want the color to change
-according to the hostname, you would change the `$CONTEXT` variable environment
-(`export CONTEXT="hostname"`) or simply use the `--context/-c` option
-(`context-color -c "hostname"`).
+hash) is `whoami; hostname`. If you would just want the color to change
+according to the hostname, you would change the `CC_CONTEXT` environment
+variable (`export CC_CONTEXT="hostname"`) or simply use the `--context/-c`
+option (`context-color -c "hostname"`).
 
 Then you could make this customization permanent by adding this line to your
 `~/.bashrc`, or to the system-wide `bashrc` file (most likely somewhere in
