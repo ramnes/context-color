@@ -98,10 +98,10 @@ __context_color_hash() {
     if [ "$CC_METHOD" = "md5sum" ]
     then
         hash=$(eval "$CC_CONTEXT" | md5sum | head -c 6 | tr '[:lower:]' '[:upper:]')
-        echo "$((16#$hash))"
+        echo "ibase=16; $hash" | bc
     else
         hash=$(eval "$CC_CONTEXT" | sum | cut -d' ' -f1)
-        echo "$((10#$hash))"
+        echo "obase=10; $hash" | bc
     fi
 }
 
