@@ -41,6 +41,14 @@ If you are working with several machines, you could either do that manipulation
 on every host, or use something like
 [Russell91/xxh](https://github.com/xxh/xxh).
 
+> :warning: Do not use single quotes around your `PS1` value. If you want the
+> color to be evaluated at each prompt, you should use `PROMPT_COMMAND`
+> instead. Here is an example:
+> 
+> ```bash
+> PS1="$PS1\[\e[0m\]"
+> PROMPT_COMMAND="context-color"
+> ```
 
 Install
 -------
