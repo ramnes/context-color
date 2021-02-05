@@ -1,6 +1,8 @@
 context-color
 =============
 
+[![Build status](https://github.com/ramnes/context-color/workflows/ci/badge.svg?branch=master)](https://github.com/ramnes/context-color/actions)
+
 :rainbow: To each context its own shell color
 
 ![gif](demo.gif)
