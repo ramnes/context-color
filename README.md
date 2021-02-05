@@ -17,7 +17,7 @@ Example
 Once installed somewhere in your `$PATH`, it allows you to do things like this:
 
 ```bash
-export PS1="$(context-color -p)$PS1\[\e[0m\]"
+PS1="$(context-color -p)$PS1\[\e[0m\]"
 ```
 
 (where `--prompt/-p` is the switch so that the color is escaped for prompts,
