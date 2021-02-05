@@ -37,7 +37,7 @@ from this.
 
 If you are working with several machines, you could either do that manipulation
 on every host, or use something like
-[Russell91/sshrc](https://github.com/Russell91/sshrc/).
+[Russell91/xxh](https://github.com/xxh/xxh).
 
 
 Install
