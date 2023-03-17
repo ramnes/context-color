@@ -1,3 +1,0 @@
-language: shell
-script:
-  - shellcheck context-color
