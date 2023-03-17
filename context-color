@@ -16,10 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-readonly PROGNAME=$(basename "$0")
-readonly DEFAULT_CONTEXT="whoami; hostname"
-readonly DEFAULT_EXCLUDES="0,7,15"
-readonly DEFAULT_METHOD="sum"
+PROGNAME="$(basename "$0")"
+readonly PROGNAME
+DEFAULT_CONTEXT="whoami; hostname"
+readonly DEFAULT_CONTEXT
+DEFAULT_EXCLUDES="0,7,15"
+readonly DEFAULT_EXCLUDES
+DEFAULT_METHOD="sum"
+readonly DEFAULT_METHOD
 
 __context_color_usage() {
     cat <<- EOF
