@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+# Project hosted at https://github.com/ramnes/context-color
+
 PROGNAME="$(basename "$0")"
 readonly PROGNAME
 DEFAULT_CONTEXT="whoami; hostname"
@@ -58,6 +60,9 @@ DEBUG OPTIONS:
                         useful information.
     --force <color>, -f <color>
                         Ignore the context and force a color id instead.
+
+https://github.com/ramnes/context-color project source and further documention.
+
 EOF
 }
 
