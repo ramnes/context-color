@@ -60,6 +60,9 @@ DEBUG OPTIONS:
                         useful information.
     --force <color>, -f <color>
                         Ignore the context and force a color id instead.
+
+https://github.com/ramnes/context-color project source and further documention.
+
 EOF
 }
 
