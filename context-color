@@ -88,8 +88,7 @@ EOF
 }
 
 __context_color_terminfo_count() {
-    hexcount=$(infocmp -1 | sed -n -e 's/^\t*colors#\([0-9]x\?[0-9]*\),.*/\1/p')
-    printf "%d" "$hexcount"
+    tput colors
 }
 
 __context_color_excludes_count() {
